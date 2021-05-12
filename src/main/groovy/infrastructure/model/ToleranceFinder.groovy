@@ -23,7 +23,6 @@ class ToleranceFinder {
 
     @Convert(converter = StringListConverter)
     List<String> atcCodes
-//    @OneToMany(targetEntity = Ingredient)
     @Convert(converter = StringListConverter)
     List<String> ingredientNames
     Long patientId

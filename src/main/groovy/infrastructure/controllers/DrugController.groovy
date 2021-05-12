@@ -46,9 +46,4 @@ class DrugController {
         drugService.deleteDrug(drugName)
     }
 
-//    @PostMapping
-//    void runTolerantFinder() {
-//
-//    }
-
 }
