@@ -80,5 +80,4 @@ class PatientService {
     void deleteById(Long id) {
         patientRepository.delete(findById(id))
     }
-
 }

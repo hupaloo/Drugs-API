@@ -1,7 +1,6 @@
 package main.groovy.infrastructure.controllers
 
 import main.groovy.infrastructure.model.Drug
-import main.groovy.infrastructure.model.Patient
 import main.groovy.infrastructure.model.ToleranceFinder
 import main.groovy.infrastructure.services.ToleranceFinderService
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,5 +27,4 @@ class ToleranceFinderController {
     ToleranceFinder findById(@PathVariable(name = "runId") Long id) {
         toleranceFinderService.findById(id)
     }
-
 }

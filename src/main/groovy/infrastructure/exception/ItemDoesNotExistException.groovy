@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 @ResponseStatus(HttpStatus.NOT_FOUND)
 class ItemDoesNotExistException extends RuntimeException {
 
-    public ItemDoesNotExistException(String message) {
+    ItemDoesNotExistException(String message) {
         super(message)
     }
-
 }

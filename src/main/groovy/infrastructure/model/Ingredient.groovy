@@ -20,5 +20,4 @@ class Ingredient {
     String ingredientName
     @JsonIgnore
     Timestamp created
-
 }

@@ -29,8 +29,7 @@ class IngredientGroupService {
     }
 
     IngredientGroup findByName(String name) {
-        def ingredientGroups = findAll()
-        def group = ingredientGroups.find { it.groupName.toLowerCase() == name.toLowerCase() }
+        def group = findAll().find { it.groupName.toLowerCase() == name.toLowerCase() }
         if (!group) {
             throw new ItemDoesNotExistException("There is no group with name '$name'")
         }
@@ -38,8 +37,7 @@ class IngredientGroupService {
     }
 
     IngredientGroup createGroup(IngredientGroup ingredientGroup) {
-        def ingredientGroups = findAll()
-        if (ingredientGroups.find { it.groupName.toLowerCase() == ingredientGroup.groupName.toLowerCase() }) {
+        if (findAll().find { it.groupName.toLowerCase() == ingredientGroup.groupName.toLowerCase() }) {
             throw new ItemAlreadyExistException("Group with name '$ingredientGroup.groupName' already exists")
         }
         setDefaultTimestamp(ingredientGroup)
@@ -47,8 +45,7 @@ class IngredientGroupService {
     }
 
     void deleteGroup(String name) {
-        def group = findByName(name)
-        ingredientGroupRepository.delete(group)
+        ingredientGroupRepository.delete(findByName(name))
     }
 
     void deleteIngredientFromGroup(String name, String ingredientName) {
@@ -64,12 +61,12 @@ class IngredientGroupService {
     IngredientGroup addIngredientToGroup(String groupName, List<Ingredient> ingredients) {
         def group = findByName(groupName)
         def dbIngredients = ingredientRepository.findAll()
-        ingredients.forEach {ingr ->
-            def ingredient = group.ingredients.find{it.ingredientName == ingr.ingredientName}
+        ingredients.forEach { ingr ->
+            def ingredient = group.ingredients.find { it.ingredientName == ingr.ingredientName }
             if (ingredient) {
                 throw new ItemAlreadyExistException("Ingredient with name '$ingr.ingredientName' already exists in group '$groupName'")
             }
-            ingr.ingredientId = dbIngredients.find{it.ingredientName == ingr.ingredientName}.ingredientId
+            ingr.ingredientId = dbIngredients.find { it.ingredientName == ingr.ingredientName }.ingredientId
         }
         group.ingredients.addAll(ingredients)
         updateTimestamp(group)
@@ -77,13 +74,12 @@ class IngredientGroupService {
         group
     }
 
-    void setDefaultTimestamp(IngredientGroup ingredientGroup) {
+    static void setDefaultTimestamp(IngredientGroup ingredientGroup) {
         ingredientGroup.created = new Timestamp(System.currentTimeMillis())
         ingredientGroup.updated = new Timestamp(System.currentTimeMillis())
     }
 
-    void updateTimestamp(IngredientGroup ingredientGroup) {
+    static void updateTimestamp(IngredientGroup ingredientGroup) {
         ingredientGroup.updated = new Timestamp(System.currentTimeMillis())
     }
-
 }

@@ -1,8 +1,6 @@
 package main.groovy.infrastructure.controllers
 
 import main.groovy.infrastructure.model.Drug
-import main.groovy.infrastructure.model.Ingredient
-import main.groovy.infrastructure.model.IngredientGroup
 import main.groovy.infrastructure.services.DrugService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -21,7 +19,7 @@ class DrugController {
     @Autowired
     DrugService drugService
 
-    @GetMapping()
+    @GetMapping
     List<Drug> findAll() {
         drugService.findAll()
     }
@@ -45,5 +43,4 @@ class DrugController {
     void remove(@PathVariable(name = "drugName") String drugName) {
         drugService.deleteDrug(drugName)
     }
-
 }

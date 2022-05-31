@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 @ResponseStatus(HttpStatus.CONFLICT)
 class ItemAlreadyExistException extends RuntimeException {
 
-    public ItemAlreadyExistException(String message) {
+    ItemAlreadyExistException(String message) {
         super(message)
     }
-
 }

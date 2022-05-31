@@ -31,5 +31,4 @@ class IngredientGroup {
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
     Set<Ingredient> ingredients
-
 }

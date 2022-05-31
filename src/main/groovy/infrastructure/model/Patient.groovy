@@ -26,5 +26,4 @@ class Patient {
             joinColumns = @JoinColumn(name = "patient_id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
     Set<Ingredient> ingredients
-
 }

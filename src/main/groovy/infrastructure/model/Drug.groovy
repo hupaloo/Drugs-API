@@ -3,6 +3,7 @@ package main.groovy.infrastructure.model
 import com.fasterxml.jackson.annotation.JsonIgnore
 
 import javax.persistence.Entity
+import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.JoinTable
@@ -10,11 +11,14 @@ import javax.persistence.ManyToMany
 import javax.persistence.Table
 import java.sql.Timestamp
 
+import static javax.persistence.GenerationType.IDENTITY
+
 @Entity
 @Table(name = 'drugs')
 class Drug {
 
     @Id
+    @GeneratedValue(strategy = IDENTITY)
     Long drugId
     String name
     String applicantDetails
@@ -34,5 +38,4 @@ class Drug {
             joinColumns = @JoinColumn(name = "drug_id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
     List<Ingredient> ingredients
-
 }

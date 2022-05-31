@@ -19,7 +19,7 @@ class IngredientGroupController {
     @Autowired
     IngredientGroupService ingredientGroupService
 
-    @GetMapping()
+    @GetMapping
     List<IngredientGroup> findAll() {
         ingredientGroupService.findAll()
     }
@@ -50,5 +50,4 @@ class IngredientGroupController {
                                   @RequestBody List<Ingredient> ingredients) {
         ingredientGroupService.addIngredientToGroup(groupName, ingredients)
     }
-
 }

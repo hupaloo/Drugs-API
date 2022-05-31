@@ -16,6 +16,8 @@ class DrugService {
 
     @Autowired
     DrugRepository drugRepository
+    @Autowired
+    IngredientService ingredientService
 
     List<Drug> findAll() {
         def drugs = drugRepository.findAll()
@@ -26,8 +28,7 @@ class DrugService {
     }
 
     Drug findByName(String name) {
-        def drugs = findAll()
-        def drug = drugs.find { it.name.toLowerCase() == name.toLowerCase() }
+        def drug = this.findAll().find { it.name.equalsIgnoreCase(name) }
         if (!drug) {
             throw new ItemDoesNotExistException("There is no drug with name '$name'")
         }
@@ -35,8 +36,8 @@ class DrugService {
     }
 
     Drug updateDrug(Drug drug) {
-        def drugs = findAll()
-        def existingDrug = drugs.find { it.drugId == drug.drugId }
+        def existingDrug = this.findAll().find { it.name.equalsIgnoreCase(drug.name) }
+        drug.drugId = existingDrug.drugId
         if (!existingDrug) {
             throw new ItemDoesNotExistException("There is no drug with name '$drug.name'")
         }
@@ -49,12 +50,13 @@ class DrugService {
         validateDrugUniqueness(drug)
         validateRequiredDrugFields(drug)
         setDefaultTimestamp(drug)
+        setDrugIngredientIds(drug)
         drugRepository.save(drug)
     }
 
     void deleteDrug(String drugName) {
-        def drug = findAll().find {
-            it.name == drugName
+        def drug = this.findAll().find {
+            it.name.toLowerCase() == drugName.toLowerCase()
         }
         if (!drug) {
             throw new ItemDoesNotExistException("There is no drug with name '$drugName'")
@@ -63,9 +65,21 @@ class DrugService {
     }
 
 
-    void validateRequiredDrugFields(Drug drug) {
+    void setDrugIngredientIds(Drug drug) {
+        def ingredients = ingredientService.findAll()
+        def ingredientNames = ingredients.collect { it.ingredientName.toLowerCase() }
+        drug.ingredients.forEach { drugIngredient ->
+            if (drugIngredient.ingredientName.toLowerCase() in ingredientNames) {
+                drugIngredient.ingredientId = ingredients.find {
+                    it.ingredientName.toLowerCase() == drugIngredient.ingredientName.toLowerCase()
+                }.ingredientId
+            }
+        }
+    }
+
+    static void validateRequiredDrugFields(Drug drug) {
         if (drug.name.isEmpty()) {
-            throw new BadRequestException("Name is required")
+            throw new BadRequestException("Назва медикаменту є обов'язковою")
         } else if (drug.atcCode.isEmpty()) {
             throw new BadRequestException("ATC code is required")
         } else if (drug.ingredients.isEmpty()) {
@@ -74,7 +88,7 @@ class DrugService {
     }
 
     void validateDrugUniqueness(Drug drug) {
-        def drugs = findAll()
+        def drugs = this.findAll()
         if (drugs.find { it.drugId == drug.drugId }) {
             throw new ItemAlreadyExistException("Drug with id '$drug.drugId' already exists")
         }
@@ -83,14 +97,12 @@ class DrugService {
         }
     }
 
-    void setDefaultTimestamp(Drug drug) {
+    static void setDefaultTimestamp(Drug drug) {
         drug.created = new Timestamp(System.currentTimeMillis())
         drug.updated = new Timestamp(System.currentTimeMillis())
     }
 
-    void updateTimestamp(Drug drug) {
+    static void updateTimestamp(Drug drug) {
         drug.updated = new Timestamp(System.currentTimeMillis())
     }
-
-
 }

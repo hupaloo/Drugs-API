@@ -19,7 +19,7 @@ class PatientController {
     @Autowired
     PatientService patientService
 
-    @GetMapping()
+    @GetMapping
     List<Patient> findAll() {
         patientService.findAll()
     }
@@ -48,5 +48,4 @@ class PatientController {
     void deleteById(@PathVariable(name = "patientId") Long id) {
         patientService.deleteById(id)
     }
-
 }

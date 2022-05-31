@@ -18,9 +18,11 @@ class IngredientController {
     @Autowired
     IngredientService ingredientService
 
-    @GetMapping()
+    @GetMapping
     List<Ingredient> findAll() {
-        ingredientService.findAll()
+        ingredientService.findAll().collect {
+            it.tap { it.ingredientName = ingredientName.capitalize() }
+        }
     }
 
     @DeleteMapping("{ingredientName}")
@@ -28,9 +30,8 @@ class IngredientController {
         ingredientService.deleteByName(ingredientName)
     }
 
-    @PostMapping()
+    @PostMapping
     void addIngredient(@RequestBody Ingredient ingredient) {
         ingredientService.create(ingredient)
     }
-
 }
